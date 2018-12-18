@@ -139,6 +139,28 @@ def return_weights(X, b, d, mincols, threshold, learning_rate, max_iter):
     return w
 
 def update(X, u2, m, weights, n, c):
+    """update the fuzzy c-means process
+
+    Parameters
+    ----------
+    X : array
+        data being clustered
+    u2 : array
+        current fuzziness matrix
+    m : float
+        fuzzy factor
+    weights : array
+        distance metrics
+    n : int
+        sample size
+    c : int
+        numebr of cluster
+
+    Returns
+    -------
+    4 arrays used in c-means
+
+    """
     u = u2.copy()
     um = u ** m
     #update cluster centeers matrix
@@ -194,6 +216,27 @@ def return_weighted_distance(X,  mincols = 0, sample_size = 1, threshold = .0005
 
 
 class c_means():
+    """ fuzzy cmeans class
+
+    Parameters
+    ----------
+    c : int
+        number of clusters
+    m : float
+        fuzzification index
+    max_iter : int
+        maximum iterations
+    threshold : float
+        threhold of improvement
+
+    Attributes
+    ----------
+    c_ : c
+    max_iter
+    threshold
+    m
+
+    """
     def __init__(self, c = 3, m = 2,  max_iter = 1000, threshold = .01):
         self.c_ = c
         self.max_iter = max_iter
@@ -201,6 +244,21 @@ class c_means():
         self.m = m
 
     def fit(self, X, weights):
+        """ performs clustering using given weights
+
+        Parameters
+        ----------
+        X : array
+            data to be clustered
+        weights : array
+            distance weight matrix
+
+        Returns
+        -------
+        class
+            attributes of clustering
+
+        """
         self.weights = weights
         c = self.c_
         m = self.m
