@@ -41,8 +41,8 @@ def single_delta(X, V, F):
 
     Returns
     -------
-    type
-        Description of returned object.
+    float
+        single distance of just one feature
 
     """
     d = X[F] - V[F]
