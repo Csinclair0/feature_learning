@@ -243,7 +243,7 @@ class c_means():
         self.threshold = threshold
         self.m = m
 
-    def fit(self, X, weights):
+    def fit(self, X, weights, log_argmax = False):
         """ performs clustering using given weights
 
         Parameters
@@ -286,3 +286,9 @@ class c_means():
         self.cluster_centers = V
         self.fuzzy_partition = u
         self.loss = J
+
+        if log_argmax == True:
+            self.cluster = np.argmax(self.f_p_coeff, axis = 1)
+
+
+
