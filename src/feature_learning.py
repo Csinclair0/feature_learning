@@ -2,6 +2,8 @@ import numpy as np
 from sklearn.metrics import pairwise_distances
 import math
 import warnings
+from scipy.sparse import triu
+
 warnings.filterwarnings('ignore')
 
 
@@ -68,7 +70,7 @@ def calc_beta(X, d):
     n = X.shape[0]
     for b in np.linspace(0,1,10000):
         p = 1/(1+b*d)
-        p = np.triu(p, 1)
+        p = triu(p, 1).toarray()
         if (2 / (n*(n-1))) *np.sum(p)< .5:
             return b
 
@@ -108,7 +110,7 @@ def return_weights(X, b, d, mincols, threshold, learning_rate, max_iter):
         grad_w = np.empty((1,X.shape[1]))
         part_pq = -b/((1+b*d)**2)
         p = 1/(1+b*d)
-        E = (2/(n*(n-1))) * np.sum(np.triu(.5*((p*(1-p_1) + p_1*(1-p))), 1))
+        E = (2/(n*(n-1))) * np.sum(triu(.5*((p*(1-p_1) + p_1*(1-p))), 1).toarray())
         if E_old - E < threshold:
             break
         E_old = E
@@ -121,9 +123,9 @@ def return_weights(X, b, d, mincols, threshold, learning_rate, max_iter):
         for j in w_valid:
             d_w = pairwise_distances(X, X, metric = single_delta, **{'F':j})
             part_w = w[0, j]*(d_w)**2 / d
-            part_w = np.triu(part_w, 1)
+            part_w = triu(part_w, 1).toarray()
             grad_w_j = 1/(n*(n-1)) * part_eq * part_pq * part_w
-            grad_w_j = np.triu(grad_w_j, 1)
+            grad_w_j = triu(grad_w_j, 1).toarray()
             grad_w[ 0, j] = np.nansum(grad_w_j)
         grad_w = grad_w * learning_rate
         w = w-grad_w
@@ -195,7 +197,7 @@ def return_weighted_distance(X,  mincols = 0, sample_size = 1, threshold = .0005
     X : array
         data set
     mincols : int
-        minimum number of columns to returdn
+        minimum number of columns to return
     sample_size :  float
         fraction of dataset to use in feature weight learning
 
